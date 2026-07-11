@@ -26,7 +26,7 @@ body {
   margin: 0;
   background: #f5f7fb;
   color: #1f2937;
-  font-family: Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 button,
@@ -34,6 +34,21 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+.mat-icon {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'liga';
 }
 
 .sr-only {
