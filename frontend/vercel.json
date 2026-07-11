@@ -1,0 +1,13 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/frontend/browser",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "routes": [
+    {
+      "src": "^/(?!.*\\.(js|css|ico|png|jpg|jpeg|svg|gif|webp|ttf|woff|woff2)$).*$",
+      "destination": "/index.html"
+    }
+  ]
+}
