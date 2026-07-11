@@ -6,6 +6,32 @@ namespace Enhanzer.Assignment.Infrastructure.Data;
 
 public sealed class LocationRepository(AssignmentDbContext dbContext) : ILocationRepository
 {
+    private const string EnsureLocationDetailsTableSql = """
+        IF OBJECT_ID(N'dbo.Location_Details', N'U') IS NULL
+        BEGIN
+            CREATE TABLE dbo.Location_Details
+            (
+                Id BIGINT IDENTITY(1,1) NOT NULL CONSTRAINT PK_Location_Details PRIMARY KEY,
+                Location_Code NVARCHAR(50) NOT NULL,
+                Location_Name NVARCHAR(200) NOT NULL,
+                Created_At_Utc DATETIME2 NOT NULL,
+                Updated_At_Utc DATETIME2 NOT NULL
+            );
+        END;
+
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM sys.indexes
+            WHERE name = N'UX_Location_Details_Location_Code'
+              AND object_id = OBJECT_ID(N'dbo.Location_Details')
+        )
+        BEGIN
+            CREATE UNIQUE INDEX UX_Location_Details_Location_Code
+                ON dbo.Location_Details(Location_Code);
+        END;
+        """;
+
     public async Task<IReadOnlyCollection<LocationDto>> GetAllAsync(CancellationToken cancellationToken) =>
         await dbContext.LocationDetails
             .AsNoTracking()
@@ -28,6 +54,8 @@ public sealed class LocationRepository(AssignmentDbContext dbContext) : ILocatio
         {
             return;
         }
+
+        await dbContext.Database.ExecuteSqlRawAsync(EnsureLocationDetailsTableSql, cancellationToken);
 
         await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
         var codes = distinctLocations.Select(location => location.LocationCode.Trim()).ToList();

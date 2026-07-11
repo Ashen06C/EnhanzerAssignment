@@ -1,0 +1,117 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\EnhanzerAssignment\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7FC8D8C2-A3F0-4B13-A4A0-31B8BE7C3F84}|src\\Enhanzer.Assignment.Infrastructure\\Enhanzer.Assignment.Infrastructure.csproj|d:\\enhanzerassignment\\backend\\src\\enhanzer.assignment.infrastructure\\externalauth\\externalauthclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7FC8D8C2-A3F0-4B13-A4A0-31B8BE7C3F84}|src\\Enhanzer.Assignment.Infrastructure\\Enhanzer.Assignment.Infrastructure.csproj|solutionrelative:src\\enhanzer.assignment.infrastructure\\externalauth\\externalauthclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D95B20-7C15-4B01-BF7E-711C30F6724C}|src\\Enhanzer.Assignment.Api\\Enhanzer.Assignment.Api.csproj|d:\\enhanzerassignment\\backend\\src\\enhanzer.assignment.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{41D95B20-7C15-4B01-BF7E-711C30F6724C}|src\\Enhanzer.Assignment.Api\\Enhanzer.Assignment.Api.csproj|solutionrelative:src\\enhanzer.assignment.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7FC8D8C2-A3F0-4B13-A4A0-31B8BE7C3F84}|src\\Enhanzer.Assignment.Infrastructure\\Enhanzer.Assignment.Infrastructure.csproj|d:\\enhanzerassignment\\backend\\src\\enhanzer.assignment.infrastructure\\enhanzer.assignment.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{7FC8D8C2-A3F0-4B13-A4A0-31B8BE7C3F84}|src\\Enhanzer.Assignment.Infrastructure\\Enhanzer.Assignment.Infrastructure.csproj|solutionrelative:src\\enhanzer.assignment.infrastructure\\enhanzer.assignment.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D95B20-7C15-4B01-BF7E-711C30F6724C}|src\\Enhanzer.Assignment.Api\\Enhanzer.Assignment.Api.csproj|d:\\enhanzerassignment\\backend\\src\\enhanzer.assignment.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D95B20-7C15-4B01-BF7E-711C30F6724C}|src\\Enhanzer.Assignment.Api\\Enhanzer.Assignment.Api.csproj|solutionrelative:src\\enhanzer.assignment.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D95B20-7C15-4B01-BF7E-711C30F6724C}|src\\Enhanzer.Assignment.Api\\Enhanzer.Assignment.Api.csproj|d:\\enhanzerassignment\\backend\\src\\enhanzer.assignment.api\\controllers\\locationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D95B20-7C15-4B01-BF7E-711C30F6724C}|src\\Enhanzer.Assignment.Api\\Enhanzer.Assignment.Api.csproj|solutionrelative:src\\enhanzer.assignment.api\\controllers\\locationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D95B20-7C15-4B01-BF7E-711C30F6724C}|src\\Enhanzer.Assignment.Api\\Enhanzer.Assignment.Api.csproj|d:\\enhanzerassignment\\backend\\src\\enhanzer.assignment.api\\controllers\\purchasebillscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D95B20-7C15-4B01-BF7E-711C30F6724C}|src\\Enhanzer.Assignment.Api\\Enhanzer.Assignment.Api.csproj|solutionrelative:src\\enhanzer.assignment.api\\controllers\\purchasebillscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ExternalAuthClient.cs",
+              "DocumentMoniker": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Infrastructure\\ExternalAuth\\ExternalAuthClient.cs",
+              "RelativeDocumentMoniker": "src\\Enhanzer.Assignment.Infrastructure\\ExternalAuth\\ExternalAuthClient.cs",
+              "ToolTip": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Infrastructure\\ExternalAuth\\ExternalAuthClient.cs",
+              "RelativeToolTip": "src\\Enhanzer.Assignment.Infrastructure\\ExternalAuth\\ExternalAuthClient.cs",
+              "ViewState": "AgIAANMAAAAAAAAAAAAkwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-11T08:10:21.601Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "src\\Enhanzer.Assignment.Api\\appsettings.json",
+              "ToolTip": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Api\\appsettings.json",
+              "RelativeToolTip": "src\\Enhanzer.Assignment.Api\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-07-11T07:48:19.093Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Enhanzer.Assignment.Infrastructure.csproj",
+              "DocumentMoniker": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Infrastructure\\Enhanzer.Assignment.Infrastructure.csproj",
+              "RelativeDocumentMoniker": "src\\Enhanzer.Assignment.Infrastructure\\Enhanzer.Assignment.Infrastructure.csproj",
+              "ToolTip": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Infrastructure\\Enhanzer.Assignment.Infrastructure.csproj",
+              "RelativeToolTip": "src\\Enhanzer.Assignment.Infrastructure\\Enhanzer.Assignment.Infrastructure.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-07-11T07:26:12.709Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Api\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "src\\Enhanzer.Assignment.Api\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Api\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "src\\Enhanzer.Assignment.Api\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-11T07:14:43.087Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "LocationsController.cs",
+              "DocumentMoniker": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Api\\Controllers\\LocationsController.cs",
+              "RelativeDocumentMoniker": "src\\Enhanzer.Assignment.Api\\Controllers\\LocationsController.cs",
+              "ToolTip": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Api\\Controllers\\LocationsController.cs",
+              "RelativeToolTip": "src\\Enhanzer.Assignment.Api\\Controllers\\LocationsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-11T07:14:41.173Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PurchaseBillsController.cs",
+              "DocumentMoniker": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Api\\Controllers\\PurchaseBillsController.cs",
+              "RelativeDocumentMoniker": "src\\Enhanzer.Assignment.Api\\Controllers\\PurchaseBillsController.cs",
+              "ToolTip": "D:\\EnhanzerAssignment\\backend\\src\\Enhanzer.Assignment.Api\\Controllers\\PurchaseBillsController.cs",
+              "RelativeToolTip": "src\\Enhanzer.Assignment.Api\\Controllers\\PurchaseBillsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-11T07:14:34.846Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

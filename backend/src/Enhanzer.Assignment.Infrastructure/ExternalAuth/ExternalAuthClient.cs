@@ -1,6 +1,7 @@
 using System.Net;
-using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Enhanzer.Assignment.Application.Auth;
 using Enhanzer.Assignment.Application.Common;
 using Enhanzer.Assignment.Application.Locations;
@@ -15,6 +16,11 @@ public sealed class ExternalAuthClient(
     ILogger<ExternalAuthClient> logger) : IExternalAuthClient
 {
     private readonly ExternalApiOptions options = options.Value;
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions ExternalRequestJsonOptions = new()
+    {
+        PropertyNamingPolicy = null
+    };
 
     public async Task<ExternalLoginResult> LoginAsync(
         ExternalLoginRequest request,
@@ -36,10 +42,13 @@ public sealed class ExternalAuthClient(
             }
         };
 
+        var jsonPayload = JsonSerializer.Serialize(payload, ExternalRequestJsonOptions);
+        using var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
         HttpResponseMessage response;
         try
         {
-            response = await httpClient.PostAsJsonAsync(options.BaseUrl, payload, timeout.Token);
+            response = await httpClient.PostAsync(options.BaseUrl, content, timeout.Token);
         }
         catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested)
         {
@@ -63,13 +72,26 @@ public sealed class ExternalAuthClient(
         var json = await response.Content.ReadAsStringAsync(cancellationToken);
         try
         {
+            LogExternalFailureIfPresent(json);
+
+            var typedResult = TryReadTypedLoginResult(json, request.Email);
+            if (typedResult is not null)
+            {
+                return typedResult;
+            }
+
             using var document = JsonDocument.Parse(json);
-            if (TryFindUserLocations(document.RootElement, out var locations))
+            if (LooksLikeAuthenticationFailure(document.RootElement))
+            {
+                throw new AuthenticationFailedException();
+            }
+
+            if (TryFindUserLocations(document.RootElement, out var locations) && locations.Count > 0)
             {
                 return new ExternalLoginResult(request.Email, locations);
             }
 
-            if (LooksLikeAuthenticationFailure(document.RootElement))
+            if (TryFindUserLocations(document.RootElement, out _))
             {
                 throw new AuthenticationFailedException();
             }
@@ -81,6 +103,76 @@ public sealed class ExternalAuthClient(
         {
             throw new ExternalServiceException("The external authentication response was not valid JSON.", ex);
         }
+    }
+
+    private void LogExternalFailureIfPresent(string json)
+    {
+        try
+        {
+            using var document = JsonDocument.Parse(json);
+            if (!TryReadInt32(document.RootElement, "Status_Code", out var statusCode) || statusCode == 200)
+            {
+                return;
+            }
+
+            var message = TryReadString(document.RootElement, "Message");
+            logger.LogWarning(
+                "External login returned Status_Code {StatusCode}. Message: {Message}",
+                statusCode,
+                message ?? "No message returned.");
+        }
+        catch (JsonException)
+        {
+            logger.LogWarning("External login returned non-JSON response.");
+        }
+    }
+
+    private static ExternalLoginResult? TryReadTypedLoginResult(string json, string fallbackEmail)
+    {
+        ExternalLoginResponse? response;
+        try
+        {
+            response = JsonSerializer.Deserialize<ExternalLoginResponse>(json, JsonOptions);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+
+        if (response is null)
+        {
+            return null;
+        }
+
+        if (response.StatusCode != 0 && response.StatusCode != 200)
+        {
+            throw new AuthenticationFailedException();
+        }
+
+        if (response.ResponseBody is null || response.ResponseBody.Count == 0)
+        {
+            return null;
+        }
+
+        var user = response.ResponseBody[0];
+        if (user.UserLocations is null)
+        {
+            return null;
+        }
+
+        var locations = user.UserLocations
+            .Where(location => !string.IsNullOrWhiteSpace(location.LocationCode) &&
+                               !string.IsNullOrWhiteSpace(location.LocationName))
+            .Select(location => new LocationDto(location.LocationCode.Trim(), location.LocationName.Trim()))
+            .ToList();
+
+        if (locations.Count == 0)
+        {
+            throw new AuthenticationFailedException();
+        }
+
+        var email = string.IsNullOrWhiteSpace(user.Email) ? fallbackEmail : user.Email.Trim();
+        return new ExternalLoginResult(email, locations);
     }
 
     private static bool TryFindUserLocations(JsonElement element, out IReadOnlyCollection<LocationDto> locations)
@@ -124,10 +216,15 @@ public sealed class ExternalAuthClient(
         if (element.ValueKind == JsonValueKind.String)
         {
             var value = element.GetString();
-            if (!string.IsNullOrWhiteSpace(value) && value.TrimStart().StartsWith("{", StringComparison.Ordinal))
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                using var nested = JsonDocument.Parse(value);
-                return TryFindUserLocations(nested.RootElement, out locations);
+                var trimmed = value.TrimStart();
+                if (trimmed.StartsWith("{", StringComparison.Ordinal) ||
+                    trimmed.StartsWith("[", StringComparison.Ordinal))
+                {
+                    using var nested = JsonDocument.Parse(value);
+                    return TryFindUserLocations(nested.RootElement, out locations);
+                }
             }
         }
 
@@ -162,6 +259,26 @@ public sealed class ExternalAuthClient(
         return null;
     }
 
+    private static bool TryReadInt32(JsonElement element, string propertyName, out int value)
+    {
+        value = default;
+
+        if (element.ValueKind != JsonValueKind.Object)
+        {
+            return false;
+        }
+
+        foreach (var property in element.EnumerateObject())
+        {
+            if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+            {
+                return property.Value.TryGetInt32(out value);
+            }
+        }
+
+        return false;
+    }
+
     private static bool LooksLikeAuthenticationFailure(JsonElement element)
     {
         if (element.ValueKind == JsonValueKind.Object)
@@ -182,5 +299,32 @@ public sealed class ExternalAuthClient(
                text.Contains("incorrect", StringComparison.OrdinalIgnoreCase) ||
                text.Contains("unauthorized", StringComparison.OrdinalIgnoreCase) ||
                text.Contains("un-authorize", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private sealed class ExternalLoginResponse
+    {
+        [JsonPropertyName("Status_Code")]
+        public int StatusCode { get; set; }
+
+        [JsonPropertyName("Response_Body")]
+        public List<ExternalLoginResponseBody>? ResponseBody { get; set; }
+    }
+
+    private sealed class ExternalLoginResponseBody
+    {
+        [JsonPropertyName("Email")]
+        public string Email { get; set; } = string.Empty;
+
+        [JsonPropertyName("User_Locations")]
+        public List<ExternalLocation>? UserLocations { get; set; }
+    }
+
+    private sealed class ExternalLocation
+    {
+        [JsonPropertyName("Location_Code")]
+        public string LocationCode { get; set; } = string.Empty;
+
+        [JsonPropertyName("Location_Name")]
+        public string LocationName { get; set; } = string.Empty;
     }
 }
