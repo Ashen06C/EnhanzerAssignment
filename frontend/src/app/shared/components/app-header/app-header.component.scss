@@ -32,11 +32,19 @@ h1 {
 
 .user-actions span {
   overflow-wrap: anywhere;
+  font-size: 0.92rem;
+  font-weight: 600;
 }
 
-button {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.55);
+.logout-button {
+  min-width: 112px;
+  color: #0f63c9;
+  background: #fff;
+  font-weight: 700;
+}
+
+.logout-button mat-icon {
+  color: inherit;
 }
 
 @media (max-width: 640px) {

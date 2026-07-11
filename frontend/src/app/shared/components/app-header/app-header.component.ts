@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
       </div>
       <div class="user-actions">
         <span>{{ email() }}</span>
-        <button mat-stroked-button type="button" (click)="logout.emit()">
+        <button class="logout-button" mat-flat-button type="button" (click)="logout.emit()">
           <mat-icon>logout</mat-icon>
           Logout
         </button>
