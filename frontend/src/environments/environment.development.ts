@@ -1,3 +1,3 @@
 export const environment = {
-  apiBaseUrl: 'https://localhost:7055/api'
+  apiBaseUrl: 'https://enhanzerassignment-production.up.railway.app/api'
 };

@@ -1,3 +1,4 @@
 export const environment = {
-  apiBaseUrl: 'https://localhost:7055/api'
+  production: true,
+  apiBaseUrl: 'https://enhanzer-api-production.up.railway.app/api'
 };
