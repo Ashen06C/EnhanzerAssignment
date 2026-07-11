@@ -65,7 +65,11 @@ export class PurchaseBillComponent {
       .pipe(finalize(() => this.locationsLoading.set(false)))
       .subscribe({
         next: (locations) => this.locations.set(locations),
-        error: () => this.locationsError.set(true)
+        error: () => {
+          const cachedLocations = this.authService.user()?.locations ?? [];
+          this.locations.set(cachedLocations);
+          this.locationsError.set(cachedLocations.length === 0);
+        }
       });
   }
 

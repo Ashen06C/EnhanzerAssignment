@@ -6,8 +6,9 @@ import { AuthUser, LoginRequest } from '../models/auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly sessionStorageKey = 'enhanzer.auth.user';
   private readonly http = inject(HttpClient);
-  private readonly userState = signal<AuthUser | null>(null);
+  private readonly userState = signal<AuthUser | null>(this.readStoredUser());
   private readonly restoringState = signal(false);
   private hasAttemptedRestore = false;
 
@@ -25,11 +26,10 @@ export class AuthService {
 
     try {
       const user = await firstValueFrom(this.http.get<AuthUser>(`${environment.apiBaseUrl}/auth/me`));
-      this.userState.set(user);
+      this.setUser(user);
       return user;
     } catch {
-      this.userState.set(null);
-      return null;
+      return this.userState();
     } finally {
       this.restoringState.set(false);
     }
@@ -43,13 +43,40 @@ export class AuthService {
       })
     );
     this.hasAttemptedRestore = true;
-    this.userState.set(user);
+    this.setUser(user);
     return user;
   }
 
   async logout(): Promise<void> {
     await firstValueFrom(this.http.post<void>(`${environment.apiBaseUrl}/auth/logout`, {}));
-    this.userState.set(null);
+    this.clearUser();
     this.hasAttemptedRestore = true;
+  }
+
+  private setUser(user: AuthUser): void {
+    this.userState.set(user);
+    sessionStorage.setItem(this.sessionStorageKey, JSON.stringify(user));
+  }
+
+  private clearUser(): void {
+    this.userState.set(null);
+    sessionStorage.removeItem(this.sessionStorageKey);
+  }
+
+  private readStoredUser(): AuthUser | null {
+    const value = sessionStorage.getItem(this.sessionStorageKey);
+    if (!value) {
+      return null;
+    }
+
+    try {
+      const user = JSON.parse(value) as Partial<AuthUser>;
+      return typeof user.email === 'string' && Array.isArray(user.locations)
+        ? { email: user.email, locations: user.locations }
+        : null;
+    } catch {
+      sessionStorage.removeItem(this.sessionStorageKey);
+      return null;
+    }
   }
 }

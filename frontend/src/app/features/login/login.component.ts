@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,6 +35,7 @@ export class LoginComponent {
 
   readonly hidePassword = signal(true);
   readonly submitting = signal(false);
+  readonly loginError = signal<string | null>(null);
 
   readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -41,6 +43,8 @@ export class LoginComponent {
   });
 
   async submit(): Promise<void> {
+    this.loginError.set(null);
+
     if (this.form.invalid || this.submitting()) {
       this.form.markAllAsTouched();
       return;
@@ -52,13 +56,39 @@ export class LoginComponent {
     try {
       await this.authService.login({ email: email.trim(), password });
       await this.router.navigateByUrl('/purchase-bill');
-    } catch {
-      this.snackBar.open('Login failed. Check your credentials or try again later.', 'Dismiss', {
+    } catch (error) {
+      const message = this.getLoginErrorMessage(error);
+      this.loginError.set(message);
+      this.snackBar.open(message, 'Dismiss', {
         duration: 5000,
         panelClass: 'error-snackbar'
       });
     } finally {
       this.submitting.set(false);
     }
+  }
+
+  private getLoginErrorMessage(error: unknown): string {
+    if (!(error instanceof HttpErrorResponse)) {
+      return 'Login failed. Check your credentials or try again later.';
+    }
+
+    if (error.status === 0) {
+      return 'Cannot reach the login service. Check that the API is running.';
+    }
+
+    if (error.status === 400) {
+      return 'Enter a valid email address and password.';
+    }
+
+    if (error.status === 401) {
+      return 'The email or password was not accepted.';
+    }
+
+    if (error.status === 502) {
+      return 'The external login service is unavailable. Please try again later.';
+    }
+
+    return 'Login failed. Check your credentials or try again later.';
   }
 }
