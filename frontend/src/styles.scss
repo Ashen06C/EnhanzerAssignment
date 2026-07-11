@@ -1,0 +1,59 @@
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$violet-palette
+      ),
+      typography: Roboto,
+      density: 0
+    )
+  );
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f5f7fb;
+  color: #1f2937;
+  font-family: Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mat-mdc-snack-bar-container.error-snackbar .mat-mdc-snackbar-surface {
+  background: #991b1b;
+  color: #fff;
+}
+
+.mat-mdc-snack-bar-container.success-snackbar .mat-mdc-snackbar-surface {
+  background: #166534;
+  color: #fff;
+}

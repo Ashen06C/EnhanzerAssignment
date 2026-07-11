@@ -1,0 +1,21 @@
+<aside class="summary" aria-labelledby="summary-title">
+  <h2 id="summary-title">Item Summary</h2>
+  <dl>
+    <div>
+      <dt>Total Items</dt>
+      <dd>{{ summary().totalItems }}</dd>
+    </div>
+    <div>
+      <dt>Total Quantity</dt>
+      <dd>{{ summary().totalQuantity | number: '1.0-2' }}</dd>
+    </div>
+    <div>
+      <dt>Total Cost</dt>
+      <dd>{{ summary().totalCost | currency }}</dd>
+    </div>
+    <div>
+      <dt>Total Selling</dt>
+      <dd>{{ summary().totalSelling | currency }}</dd>
+    </div>
+  </dl>
+</aside>

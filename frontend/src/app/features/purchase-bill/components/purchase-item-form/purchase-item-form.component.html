@@ -1,0 +1,88 @@
+<form class="item-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <mat-form-field appearance="outline">
+    <mat-label>Item</mat-label>
+    <input
+      matInput
+      formControlName="itemName"
+      [matAutocomplete]="itemAutocomplete"
+      autocomplete="off"
+    />
+    <mat-autocomplete #itemAutocomplete="matAutocomplete" (optionSelected)="onAutocompleteSelected($event)">
+      @for (item of filteredItems(); track item) {
+        <mat-option [value]="item">{{ item }}</mat-option>
+      } @empty {
+        <mat-option disabled>No matching items</mat-option>
+      }
+    </mat-autocomplete>
+    @if (form.controls.itemName.hasError('required')) {
+      <mat-error>Item is required.</mat-error>
+    } @else if (form.controls.itemName.hasError('allowedItem')) {
+      <mat-error>Select one of the allowed fruit items.</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Batch</mat-label>
+    <mat-select formControlName="locationCode">
+      @if (locationsLoading()) {
+        <mat-option disabled><app-loading-spinner label="Loading batches" /> Loading batches</mat-option>
+      } @else if (locationsError()) {
+        <mat-option disabled>Could not load batches</mat-option>
+      } @else {
+        @for (location of locations(); track location.locationCode) {
+          <mat-option [value]="location.locationCode">{{ location.locationName }}</mat-option>
+        } @empty {
+          <mat-option disabled>No locations available</mat-option>
+        }
+      }
+    </mat-select>
+    @if (form.controls.locationCode.hasError('required')) {
+      <mat-error>Batch is required.</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Standard Cost</mat-label>
+    <input matInput type="number" min="0" step="0.01" formControlName="standardCost" />
+    @if (form.controls.standardCost.invalid) {
+      <mat-error>Enter a value of zero or greater.</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Standard Price</mat-label>
+    <input matInput type="number" min="0" step="0.01" formControlName="standardPrice" />
+    @if (form.controls.standardPrice.invalid) {
+      <mat-error>Enter a value of zero or greater.</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Quantity</mat-label>
+    <input matInput type="number" min="0.01" step="0.01" formControlName="quantity" />
+    @if (form.controls.quantity.invalid) {
+      <mat-error>Quantity must be greater than zero.</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Discount Percentage</mat-label>
+    <input matInput type="number" min="0" max="100" step="0.01" formControlName="discountPercentage" />
+    @if (form.controls.discountPercentage.invalid) {
+      <mat-error>Discount must be between 0 and 100.</mat-error>
+    }
+  </mat-form-field>
+
+  <div class="form-actions">
+    @if (locationsError()) {
+      <button mat-stroked-button type="button" (click)="retryLocations.emit()">
+        <mat-icon>refresh</mat-icon>
+        Retry Batches
+      </button>
+    }
+    <button mat-flat-button color="primary" type="submit" [disabled]="locationsLoading() || locationsError()">
+      <mat-icon>add</mat-icon>
+      Add Item
+    </button>
+  </div>
+</form>

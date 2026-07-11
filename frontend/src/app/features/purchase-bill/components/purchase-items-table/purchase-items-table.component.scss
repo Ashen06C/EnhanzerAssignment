@@ -1,0 +1,22 @@
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+}
+
+table {
+  width: 100%;
+  min-width: 980px;
+}
+
+th {
+  color: #475569;
+  font-weight: 700;
+}
+
+.empty-state {
+  padding: 2rem;
+  color: #64748b;
+  text-align: center;
+}

@@ -1,0 +1,48 @@
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 4vw, 2.5rem);
+  color: #fff;
+  background: #0f63c9;
+  box-shadow: 0 3px 16px rgba(15, 99, 201, 0.22);
+}
+
+.eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-weight: 700;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.user-actions span {
+  overflow-wrap: anywhere;
+}
+
+button {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 640px) {
+  .app-header,
+  .user-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,26 @@
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+!.vscode/extensions.json
+
+# Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+
+# .NET
+**/bin/
+**/obj/
+backend/TestResults/
+
+# Local runtime files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Workspace scratch
+work/
+outputs/

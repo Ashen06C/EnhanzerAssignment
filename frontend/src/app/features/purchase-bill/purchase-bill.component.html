@@ -1,0 +1,42 @@
+@if (user(); as activeUser) {
+  <app-header [email]="activeUser.email" (logout)="logout()" />
+}
+
+<main class="purchase-page">
+  <section class="content">
+    <div class="workspace">
+      <section class="main-column">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Purchase Bill</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <app-purchase-item-form
+              [locations]="locations()"
+              [locationsLoading]="locationsLoading()"
+              [locationsError]="locationsError()"
+              (retryLocations)="loadLocations()"
+              (addItem)="addItem($event)"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <app-purchase-items-table [lines]="lines()" (remove)="removeItem($event)" />
+      </section>
+
+      <section class="side-column">
+        <app-item-summary [summary]="summary()" />
+        <button mat-flat-button color="primary" type="button" [disabled]="lines().length === 0 || saving()" (click)="saveBill()">
+          @if (saving()) {
+            <app-loading-spinner label="Saving purchase bill" />
+          } @else {
+            <ng-container>
+              <mat-icon>save</mat-icon>
+              Save Purchase Bill
+            </ng-container>
+          }
+        </button>
+      </section>
+    </div>
+  </section>
+</main>

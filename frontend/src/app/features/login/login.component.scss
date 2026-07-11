@@ -1,0 +1,43 @@
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(25, 118, 210, 0.08), transparent 28rem),
+    #fff;
+}
+
+.login-panel {
+  width: min(100%, 390px);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+h1 {
+  margin: 0 0 2rem;
+  color: #111827;
+  font-size: clamp(2.4rem, 10vw, 4rem);
+  line-height: 1;
+  font-weight: 800;
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+}
+
+.login-button {
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(90deg, #1296db, #7b3fe4);
+  box-shadow: 0 12px 28px rgba(71, 85, 205, 0.25);
+}
+
+.login-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
