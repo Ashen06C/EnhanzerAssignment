@@ -1,69 +1,112 @@
 # Enhanzer Assignment
 
-Responsive two-page coding assignment built with Angular and ASP.NET Core. The browser authenticates through the local API, the API calls the Enhanzer staging endpoint, stores returned locations in SQL Server, and protects the Purchase Bill workflow with a secure HttpOnly cookie.
+Two-page full stack assignment built with Angular 22 and ASP.NET Core Web API. The app authenticates through the Enhanzer staging API, stores returned user locations in SQL Server, and protects the Purchase Bill workflow after login.
 
 ## Features
 
-- Login page with validation, password visibility toggle, spinner, and friendly errors.
-- External login proxy using `API_Action = GetLoginData`, `Device_Id = D001`, email as `Company_Code` and `Username`, and entered password as `Pw`.
-- Cookie-based local authenticated session.
-- Protected Purchase Bill page with user header and logout.
-- Batch dropdown populated from `Location_Details`.
-- Fruit autocomplete for Mango, Apple, Banana, Orange, Grapes, Kiwi, and Strawberry.
-- Decimal purchase calculations and backend recalculation before persistence.
-- SQL Server schema, EF Core mappings, tests, and setup documentation.
+- Login page with required field validation, password visibility toggle, loading state, and meaningful error messages.
+- Backend proxy for the external API endpoint:
+  `https://ez-staging-api.azurewebsites.net/api/External_Api/POS_Api/Invoke`.
+- Login request sends `API_Action = GetLoginData`, `Device_Id = D001`, email as `Company_Code` and `Username`, and password as `Pw`.
+- Successful login reads `Response_Body[0].User_Locations` and saves `Location_Code` / `Location_Name` into `Location_Details`.
+- Cookie-based authenticated session with protected Purchase Bill routes and APIs.
+- Refresh support on the Purchase Bill page using a non-secret session snapshot for user email and locations.
+- Purchase Bill form with fruit autocomplete, batch dropdown, validations, line-item table, and item summary.
+- Backend recalculates purchase totals before saving bills.
 
 ## Technology Stack
 
-- Frontend: Angular 21, TypeScript strict mode, standalone components, Reactive Forms, Angular Material.
-- Backend: .NET 8, ASP.NET Core Web API, EF Core, SQL Server, cookie authentication.
-- Tests: Vitest/Angular unit tests and xUnit backend tests.
+- Frontend: Angular 22, TypeScript 6, Angular Material, Reactive Forms, npm.
+- Backend: .NET 8, ASP.NET Core Web API, C#, EF Core, SQL Server.
+- Tests: Angular/Vitest tests and xUnit backend tests.
+
+## Requirements Covered
+
+- Basic login page based on the provided design.
+- External API authentication through the ASP.NET Core backend.
+- Input validation and friendly validation/error messages.
+- Unauthorized access prevention for the Purchase Bill page.
+- Secure HttpOnly authentication cookie.
+- SQL Server persistence for `Location_Details`.
+- Item autocomplete values: Mango, Apple, Banana, Orange, Grapes, Kiwi, Strawberry.
+- Batch dropdown populated from saved `Location_Details`.
+- Total Cost and Total Selling calculations.
+- Add item table and summary totals.
+- REST API integration, component-based Angular structure, reusable components, error handling, and loading indicators.
 
 ## Prerequisites
 
-- Node.js compatible with Angular 21. This environment had Node `22.20.0`, which is below Angular 22's minimum, so Angular 21 is used.
-- npm 10+
-- .NET 8 SDK
-- SQL Server or SQL Server Express/LocalDB
+- Node.js 24.18.0 or another Angular 22 compatible Node version.
+- npm 11+.
+- .NET 8 SDK.
+- SQL Server, SQL Server Express, LocalDB, or a hosted SQL Server database.
+
+Check versions:
+
+```powershell
+node -v
+npm -v
+dotnet --version
+```
 
 ## Configuration
 
-Backend configuration can be provided in `appsettings.Development.json`, environment variables, or user secrets.
+The repository does not need real passwords committed in `appsettings.json`. Use environment variables or user secrets for real database credentials.
+
+Local SQL Server example:
 
 ```powershell
 $env:ConnectionStrings__DefaultConnection="Server=localhost;Database=EnhanzerAssignment;Trusted_Connection=True;TrustServerCertificate=True"
+```
+
+Hosted SQL Server example:
+
+```powershell
+$env:ConnectionStrings__DefaultConnection="Data Source=SQL8020.site4now.net;Initial Catalog=db_acbe07_methsarasilva;User Id=db_acbe07_methsarasilva_admin;Password=YOUR_DB_PASSWORD;Encrypt=True;TrustServerCertificate=True;"
+```
+
+External API settings can also be overridden:
+
+```powershell
 $env:ExternalApi__BaseUrl="https://ez-staging-api.azurewebsites.net/api/External_Api/POS_Api/Invoke"
+$env:ExternalApi__DeviceId="D001"
 $env:Authentication__ExpirationMinutes="60"
 ```
 
-No passwords or sample credentials are stored in the repository.
-
 ## Database Setup
 
-Run the SQL script in SQL Server Management Studio or `sqlcmd`:
+The backend creates `Location_Details` before saving login locations. The full SQL script is also included at:
+
+```text
+database/schema.sql
+```
+
+Run it manually if you want to create all tables up front:
 
 ```powershell
 sqlcmd -S localhost -d EnhanzerAssignment -i database/schema.sql
 ```
 
-EF Core migration commands:
+For hosted SQL Server:
 
 ```powershell
-dotnet tool install --global dotnet-ef
-dotnet ef migrations add InitialCreate --project backend/src/Enhanzer.Assignment.Infrastructure --startup-project backend/src/Enhanzer.Assignment.Api
-dotnet ef database update --project backend/src/Enhanzer.Assignment.Infrastructure --startup-project backend/src/Enhanzer.Assignment.Api
+sqlcmd -S SQL8020.site4now.net -d db_acbe07_methsarasilva -U db_acbe07_methsarasilva_admin -P YOUR_DB_PASSWORD -i database/schema.sql
 ```
 
-## Run the Application
-
-Backend:
+## Run The Backend
 
 ```powershell
 dotnet restore backend/Enhanzer.Assignment.sln
-dotnet run --project backend/src/Enhanzer.Assignment.Api
+dotnet run --project backend/src/Enhanzer.Assignment.Api --urls "https://localhost:7055;http://localhost:5055"
 ```
 
-Frontend:
+Swagger:
+
+```text
+https://localhost:7055/swagger
+```
+
+## Run The Frontend
 
 ```powershell
 cd frontend
@@ -71,17 +114,24 @@ npm install
 npm start
 ```
 
-Open `http://localhost:4200`.
+Open:
 
-## Tests and Builds
-
-```powershell
-dotnet build backend/Enhanzer.Assignment.sln
-dotnet test backend/Enhanzer.Assignment.sln
-cd frontend
-npm test -- --watch=false
-npm run build
+```text
+http://localhost:4200
 ```
+
+Use `localhost`, not `127.0.0.1`, so the CORS and cookie settings match the development configuration.
+
+## Login Test Credentials
+
+Use the credentials provided for the assignment/testing environment:
+
+```text
+Email: info@enhanzer.com
+Password: Welcome#3
+```
+
+Do not store real passwords in source control.
 
 ## API Endpoints
 
@@ -92,47 +142,73 @@ npm run build
 - `POST /api/purchase-bills`
 - `GET /health`
 
-## Calculation Formulas
+## Purchase Calculations
 
-- Gross Cost = Standard Cost x Quantity
-- Discount Amount = Gross Cost x Discount Percentage / 100
-- Total Cost = Gross Cost - Discount Amount
-- Total Selling = Standard Price x Quantity
+- Gross Cost = Standard Cost x Quantity.
+- Discount Amount = Gross Cost x Discount Percentage / 100.
+- Total Cost = Gross Cost - Discount Amount.
+- Total Selling = Standard Price x Quantity.
+- Summary Total Items = number of rows.
+- Summary Total Quantity = sum of row quantities.
+- Summary Total Cost = sum of row total costs.
+- Summary Total Selling = sum of row total selling values.
 
-Monetary values are rounded to two decimals using `MidpointRounding.AwayFromZero`.
+## Tests And Builds
 
-## Assumptions
+Backend:
 
-- The PDF screenshots describe a minimal centered login UI and a blue-header purchase bill UI; the PDF file itself was blocked by sandbox permissions during implementation, so the attached text requirements drove the build.
-- A successful external response is identified by finding a `User_Locations` collection in the returned JSON, including nested or string-encoded JSON bodies.
-- A dummy invalid-login probe returned HTTP 200 with `Status_Code: 401`, message `Un-Authorize POS API Request.`, and `Response_Body: null`; the backend maps that wrapped response to local HTTP 401.
-- Empty `User_Locations` is treated as an authenticated but location-less user, because the requirements say empty collections must be handled safely.
+```powershell
+dotnet test backend/Enhanzer.Assignment.sln
+```
 
-## Troubleshooting
+Frontend:
 
-- If cookies do not persist locally, confirm Angular calls `https://localhost:7055` and the API CORS origin includes `http://localhost:4200`.
-- If login returns 502, inspect API logs for external service timeout, invalid JSON, or an unexpected response shape.
-- If Angular 22 is installed accidentally, upgrade Node to the required version or keep Angular 21 as this project does.
+```powershell
+cd frontend
+npm run build
+npm test -- --watch=false
+```
 
-## Security Considerations
+Verified locally with:
 
-- Passwords are not logged or stored.
-- Angular never calls the external API directly.
-- The session cookie is HttpOnly and secure outside Development.
-- API errors return sanitized ProblemDetails responses.
+- Node.js `v24.18.0`
+- npm `11.16.0`
+- Angular packages `22.0.x`
+- .NET `8`
 
-## Screenshots
+## Project Structure
 
-Add final screenshots after running locally:
+```text
+backend/
+  src/
+    Enhanzer.Assignment.Api
+    Enhanzer.Assignment.Application
+    Enhanzer.Assignment.Domain
+    Enhanzer.Assignment.Infrastructure
+  tests/
+frontend/
+  src/app/core
+  src/app/features/login
+  src/app/features/purchase-bill
+  src/app/shared
+database/
+  schema.sql
+```
 
-- Login page
-- Purchase Bill desktop
-- Purchase Bill mobile
+## Security Notes
+
+- Passwords are never stored in the frontend or database.
+- The frontend calls only the local backend, not the external login API directly.
+- The backend session uses an HttpOnly cookie.
+- A small non-secret `sessionStorage` snapshot is used only to keep the Purchase Bill page stable after refresh.
+- API errors are returned as sanitized ProblemDetails responses.
 
 ## Submission Checklist
 
-- Angular build passes.
-- .NET build and tests pass on a machine with the .NET 8 SDK.
-- SQL script is included.
-- README, architecture notes, and demo script are included.
-- No secrets or sample credentials are committed.
+- Push the final project to GitHub.
+- Include `database/schema.sql`.
+- Keep real passwords out of committed files.
+- Confirm `npm run build` passes.
+- Confirm `dotnet test backend/Enhanzer.Assignment.sln` passes.
+- Record a 5-10 minute demo showing login, location save, batch dropdown, item add, summary update, page refresh, and purchase bill save.
+- Complete the required submission form.
